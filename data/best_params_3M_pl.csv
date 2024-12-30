@@ -1,0 +1,2 @@
+iterations,max_depth,learning_rate,l2_leaf_reg,border_count,random_strength,bagging_temperature,min_data_in_leaf,grow_policy,one_hot_max_size,leaf_estimation_iterations,leaf_estimation_method
+4026,6,0.060675495954815264,0.005442867902286305,101,0.029109770155172143,0.6236622852035233,90,SymmetricTree,10,6,Gradient
