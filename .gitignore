@@ -21,6 +21,7 @@ __pycache__/
 *.tmp
 
 source/catboost_info/
+source/__pycache__
 data/instructions/
 data/train_data/
 data/train_target.csv
