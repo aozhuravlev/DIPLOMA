@@ -13,8 +13,23 @@ from sklearn.metrics import roc_auc_score
 from feature_engineering_pl import print_status_and_time
 
 
+def load_model():
+    params_df = pd.read_csv("../data/best_params_3M_pl.csv")
+    params = params_df.to_dict(orient="records")[0]
+
+    cbc = CatBoostClassifier(
+        **params,
+        random_seed=137,
+        eval_metric="AUC",
+        task_type="GPU",
+        logging_level="Silent",
+        auto_class_weights="SqrtBalanced",
+    )
+
+    return cbc
+
 @print_status_and_time
-def get_model_and_score(input_df: pd.DataFrame) -> Tuple[CatBoostClassifier, float]:
+def get_model_and_score(X: pd.DataFrame, y: pd.Series) -> Tuple[CatBoostClassifier, float]:
     """
     Train a CatBoost classifier on the input data and evaluate its performance.
 
@@ -37,11 +52,6 @@ def get_model_and_score(input_df: pd.DataFrame) -> Tuple[CatBoostClassifier, flo
         - The model is trained using a GPU for faster computation.
         - The AUC score is calculated using the predicted probabilities of the positive class.
     """
-
-    df = input_df.copy()
-
-    X = df.drop("flag", axis=1)
-    y = df["flag"]
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, stratify=y, random_state=137, shuffle=True

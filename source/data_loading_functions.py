@@ -53,7 +53,7 @@ def load_data():
 
 
 @print_status_and_time
-def load_target(input_df):
+def load_target():
     """
     Load the target variable and merge it with the input DataFrame.
 
@@ -74,11 +74,11 @@ def load_target(input_df):
         The target CSV should have `id` and `flag` columns.
     """
 
-    df = input_df.clone()
+    # df = input_df.clone()
     target = pl.read_csv("../data/train_target.csv")
     target = target.with_columns(
         pl.col("id").cast(pl.Int32), pl.col("flag").cast(pl.Int8)
     )
-    df = df.join(target, on="id", how="left")
+    # df = df.join(target, on="id", how="left")
 
-    return df
+    return target['flag']

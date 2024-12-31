@@ -4,14 +4,14 @@ import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-# from typing import Optional
-
-
 app = FastAPI()
+
+# Load model
 with open("models/credit_risk_management_model.pkl", "rb") as file:
     model = dill.load(file)
 
 
+# Request schema
 class Form(BaseModel):
     id: int
     rn: int
@@ -75,9 +75,18 @@ class Form(BaseModel):
     fclose_flag: int
 
 
+# Response schema
 class Prediction(BaseModel):
     id: int
     predicted_default: int
+
+
+# Routes
+@app.get("/")
+def root():
+    return {
+        "message": "Welcome to the Credit Risk Management API. Use /status, /version, or /predict endpoints."
+    }
 
 
 @app.get("/status")
@@ -96,6 +105,6 @@ def predict(form: Form):
     y = model["model"].predict(df)
 
     return {
-        "client_id": form.id,
+        "id": form.id,
         "predicted_default": y[0],
     }
