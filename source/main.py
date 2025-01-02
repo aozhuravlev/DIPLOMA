@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from pipeline import create_preprocessor
 
+
 app = FastAPI()
 
 # Load model

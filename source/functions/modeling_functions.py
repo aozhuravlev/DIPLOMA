@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from catboost import CatBoostClassifier
 from sklearn.metrics import roc_auc_score
 
-from feature_engineering_pl import print_status_and_time
+from functions.wrappers import print_status_and_time
 
 
 @print_status_and_time

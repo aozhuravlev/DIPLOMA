@@ -4,17 +4,22 @@ import numpy as np
 
 from typing import Set
 
-from feature_engineering_pl import print_status_and_time
+from functions.wrappers import print_status_and_time
+
 
 def drop_constant_features(input_df: pl.DataFrame) -> pl.DataFrame:
+    """
+    Drops constant or redundant features from the input DataFrame.
+
+    Args:
+        input_df (pl.DataFrame): The input Polars DataFrame containing features.
+
+    Returns:
+        pl.DataFrame: A DataFrame with constant features removed.
+    """
     df = input_df.clone()
     return df.drop("pre_loans_total_overdue")
 
-    # non_constant_cols = [
-    #     col for col in df.columns 
-    #     if df[col].n_unique() > 1
-    # ]
-    # return df.select(non_constant_cols)
 
 
 @print_status_and_time
