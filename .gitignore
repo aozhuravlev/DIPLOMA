@@ -3,6 +3,7 @@
 *.pyo
 *.pyd
 __pycache__/
+__init__.py
 
 # Виртуальное окружение
 .venv/

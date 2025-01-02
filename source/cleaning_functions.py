@@ -8,11 +8,13 @@ from feature_engineering_pl import print_status_and_time
 
 def drop_constant_features(input_df: pl.DataFrame) -> pl.DataFrame:
     df = input_df.clone()
-    non_constant_cols = [
-        col for col in df.columns 
-        if df[col].n_unique() > 1
-    ]
-    return df.select(non_constant_cols)
+    return df.drop("pre_loans_total_overdue")
+
+    # non_constant_cols = [
+    #     col for col in df.columns 
+    #     if df[col].n_unique() > 1
+    # ]
+    # return df.select(non_constant_cols)
 
 
 @print_status_and_time
@@ -42,22 +44,31 @@ def remove_hi_corr_feats(
     """
     df = input_df.clone()
 
-    # Compute correlation matrix
-    corr_matrix = df.corr().to_numpy()
+    # # Compute correlation matrix
+    # corr_matrix = df.corr().to_numpy()
 
-    # Extract the upper triangle of the correlation matrix (excluding diagonal)
-    upper_tri = np.triu(corr_matrix, k=1)
+    # # Extract the upper triangle of the correlation matrix (excluding diagonal)
+    # upper_tri = np.triu(corr_matrix, k=1)
 
-    to_drop: Set[str] = set()
+    # to_drop: Set[str] = set()
 
-    # Identify features to drop based on the correlation threshold
-    for i in range(upper_tri.shape[0]):
-        for j in range(i + 1, upper_tri.shape[1]):
-            if abs(upper_tri[i, j]) > threshold:
-                to_drop.add(df.columns[j])
+    # # Identify features to drop based on the correlation threshold
+    # for i in range(upper_tri.shape[0]):
+    #     for j in range(i + 1, upper_tri.shape[1]):
+    #         if abs(upper_tri[i, j]) > threshold:
+    #             to_drop.add(df.columns[j])
+    
+    # hi_corr_features = list(to_drop)
+    
+    # with open("../data/feats_to_drop.txt", "w") as f:
+    #     for feat in hi_corr_features:
+    #         f.write(f'{feat}\n')
 
+    with open("../data/feats_to_drop.txt", "r") as f:
+        hi_corr_features = f.read().splitlines()
+                
     # Drop the highly correlated features
-    return df.drop(list(to_drop))
+    return df.drop(hi_corr_features)
 
 
 @print_status_and_time

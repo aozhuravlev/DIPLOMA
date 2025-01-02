@@ -2,8 +2,6 @@ import time
 
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import roc_auc_score
 
 from data_loading_functions import load_data, load_target
 from cleaning_functions import (
@@ -11,7 +9,7 @@ from cleaning_functions import (
     remove_hi_corr_feats, 
     convert_to_pandas
 )
-from modeling_functions import dump_model, load_model
+from modeling_functions import dump_model, get_model_and_score
 from feature_engineering_pl import (
     horizontal_sum,
     grouping_features,
@@ -20,10 +18,7 @@ from feature_engineering_pl import (
 )
 
 
-def main():
-
-    start_time = time.time()
-
+def create_preprocessor():
     feature_engineering = Pipeline(
         steps=[
             ("drop_constant_features", FunctionTransformer(drop_constant_features)),
@@ -48,25 +43,18 @@ def main():
         ]
     )
 
+    return preprocessor
 
+
+def main():
+    start_time = time.time()
+    preprocessor = create_preprocessor()
+    
     X = preprocessor.fit_transform(load_data())
     y = convert_to_pandas(load_target())
     
-    model = load_model()
-
-    pipe = Pipeline(steps=[
-        ("preprocessor", preprocessor), 
-        ("classifier", model),
-    ])      
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, stratify=y, random_state=137, shuffle=True
-    )
-
-    fitted_pipe = pipe.fit(X_train, y_train)
-    score = roc_auc_score(y_test, fitted_pipe.predict_proba(X_test)[:, 1])
-    
-    dump_model(fitted_pipe, score, start_time)
+    model, score = get_model_and_score(X, y)
+    dump_model(model, score, start_time)
 
 
 if __name__ == "__main__":
