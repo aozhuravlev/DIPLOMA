@@ -28,53 +28,53 @@ def load_model():
 
     return cbc
 
-@print_status_and_time
-def get_model_and_score(X: pd.DataFrame, y: pd.Series) -> Tuple[CatBoostClassifier, float]:
-    """
-    Train a CatBoost classifier on the input data and evaluate its performance.
+# @print_status_and_time
+# def get_model_and_score(X: pd.DataFrame, y: pd.Series) -> Tuple[CatBoostClassifier, float]:
+#     """
+#     Train a CatBoost classifier on the input data and evaluate its performance.
 
-    This function splits the input DataFrame into features (`X`) and target (`y`),
-    then splits the data into training and test sets. It reads the best hyperparameters
-    from a CSV file and trains a CatBoost classifier. After training, the function
-    evaluates the model's performance using AUC (Area Under the Curve) on the test set
-    and returns the trained model along with the AUC score.
+#     This function splits the input DataFrame into features (`X`) and target (`y`),
+#     then splits the data into training and test sets. It reads the best hyperparameters
+#     from a CSV file and trains a CatBoost classifier. After training, the function
+#     evaluates the model's performance using AUC (Area Under the Curve) on the test set
+#     and returns the trained model along with the AUC score.
 
-    Args:
-        input_df (pd.DataFrame): Input pandas DataFrame containing the features and target.
+#     Args:
+#         input_df (pd.DataFrame): Input pandas DataFrame containing the features and target.
 
-    Returns:
-        Tuple[CatBoostClassifier, float]: The trained CatBoost model and its AUC score.
+#     Returns:
+#         Tuple[CatBoostClassifier, float]: The trained CatBoost model and its AUC score.
 
-    Note:
-        - The `flag` column is assumed to be the target variable.
-        - The function expects the best hyperparameters for the model to be in the
-          `best_params_3M_pl.csv` file located at `../data/`.
-        - The model is trained using a GPU for faster computation.
-        - The AUC score is calculated using the predicted probabilities of the positive class.
-    """
+#     Note:
+#         - The `flag` column is assumed to be the target variable.
+#         - The function expects the best hyperparameters for the model to be in the
+#           `best_params_3M_pl.csv` file located at `../data/`.
+#         - The model is trained using a GPU for faster computation.
+#         - The AUC score is calculated using the predicted probabilities of the positive class.
+#     """
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, stratify=y, random_state=137, shuffle=True
-    )
+#     X_train, X_test, y_train, y_test = train_test_split(
+#         X, y, test_size=0.2, stratify=y, random_state=137, shuffle=True
+#     )
 
-    params_df = pd.read_csv("../data/best_params_3M_pl.csv")
-    params = params_df.to_dict(orient="records")[0]
+#     params_df = pd.read_csv("../data/best_params_3M_pl.csv")
+#     params = params_df.to_dict(orient="records")[0]
 
-    cbc = CatBoostClassifier(
-        **params,
-        random_seed=137,
-        eval_metric="AUC",
-        task_type="GPU",
-        logging_level="Silent",
-        auto_class_weights="SqrtBalanced",
-    )
+#     cbc = CatBoostClassifier(
+#         **params,
+#         random_seed=137,
+#         eval_metric="AUC",
+#         task_type="GPU",
+#         logging_level="Silent",
+#         auto_class_weights="SqrtBalanced",
+#     )
 
-    cbc.fit(X_train, y_train)
-    y_pred = cbc.predict_proba(X_test)[:, 1]
+#     cbc.fit(X_train, y_train)
+#     y_pred = cbc.predict_proba(X_test)[:, 1]
 
-    score = roc_auc_score(y_test, y_pred)
+#     score = roc_auc_score(y_test, y_pred)
 
-    return cbc, score
+#     return cbc, score
 
 
 def dump_model(model: CatBoostClassifier, score: float, start_time: float) -> None:

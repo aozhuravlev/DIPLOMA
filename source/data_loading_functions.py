@@ -15,7 +15,6 @@ def load_data():
         - Casts the `id` column to `Int32`.
         - Casts all other columns (excluding `id`) to `Int8`.
         - Casts specific boolean indicator columns to `Boolean`.
-    4. Drops the `pre_loans_total_overdue` column from the dataset.
 
     Returns:
         pl.DataFrame: A Polars DataFrame containing the processed data.
@@ -31,6 +30,7 @@ def load_data():
 
     data_to_read = pl.read_parquet(file_path)
     df = pl.DataFrame(data_to_read)
+
     bool_cols = [
         "is_zero_util",
         "is_zero_over2limit",
@@ -38,18 +38,14 @@ def load_data():
         "pclose_flag",
         "fclose_flag",
     ]
-
     df = df.with_columns(
         pl.col("id").cast(pl.Int32),
     )
-
     df = df.with_columns(pl.col(col).cast(pl.Int8) for col in df.columns if col != "id")
-
     df = df.with_columns(
         (pl.col(col).cast(pl.Boolean) for col in df.columns if col in bool_cols)
     )
-
-    return df.drop("pre_loans_total_overdue")
+    return df
 
 
 @print_status_and_time

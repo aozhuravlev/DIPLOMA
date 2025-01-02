@@ -80,15 +80,6 @@ class Prediction(BaseModel):
     id: int
     predicted_default: int
 
-
-# Routes
-@app.get("/")
-def root():
-    return {
-        "message": "Welcome to the Credit Risk Management API. Use /status, /version, or /predict endpoints."
-    }
-
-
 @app.get("/status")
 def status():
     return "I await your commands, my Lord."

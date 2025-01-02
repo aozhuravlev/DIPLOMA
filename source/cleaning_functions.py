@@ -6,6 +6,14 @@ from typing import Set
 
 from feature_engineering_pl import print_status_and_time
 
+def drop_constant_features(input_df: pl.DataFrame) -> pl.DataFrame:
+    df = input_df.clone()
+    non_constant_cols = [
+        col for col in df.columns 
+        if df[col].n_unique() > 1
+    ]
+    return df.select(non_constant_cols)
+
 
 @print_status_and_time
 def remove_hi_corr_feats(
