@@ -37,8 +37,6 @@ async def predict(file: UploadFile = File(...)):
     preprocessor = create_preprocessor()
     preprocessed_data = preprocessor.fit_transform(df)
     y = model["model"].predict(preprocessed_data)[0]
-    print(df["id"][0])
-    print(y)
 
     response = PredictionResponse(
         id=df["id"][0],
