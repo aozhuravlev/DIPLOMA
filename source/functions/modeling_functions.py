@@ -126,18 +126,4 @@ def dump_model(model: CatBoostClassifier, score: float, start_time: float) -> No
 
     playsound()
 
-
-# def load_model():
-#     params_df = pd.read_csv("../data/best_params_3M_pl.csv")
-#     params = params_df.to_dict(orient="records")[0]
-
-#     cbc = CatBoostClassifier(
-#         **params,
-#         random_seed=137,
-#         eval_metric="AUC",
-#         task_type="GPU",
-#         logging_level="Silent",
-#         auto_class_weights="SqrtBalanced",
-#     )
-
-#     return cbc
+    return

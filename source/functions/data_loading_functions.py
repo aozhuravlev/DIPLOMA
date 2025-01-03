@@ -70,11 +70,9 @@ def load_target():
         The target CSV should have `id` and `flag` columns.
     """
 
-    # df = input_df.clone()
     target = pl.read_csv("../data/train_target.csv")
     target = target.with_columns(
         pl.col("id").cast(pl.Int32), pl.col("flag").cast(pl.Int8)
     )
-    # df = df.join(target, on="id", how="left")
 
     return target['flag']

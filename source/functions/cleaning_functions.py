@@ -93,4 +93,5 @@ def convert_to_pandas(input_df: pl.DataFrame) -> pd.DataFrame:
     Note:
         - The conversion is performed using the `to_pandas` method provided by Polars.
     """
-    return input_df.to_pandas()
+    df = input_df.clone()
+    return df.to_pandas()
