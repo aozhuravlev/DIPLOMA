@@ -112,7 +112,7 @@ def dump_model(model: CatBoostClassifier, score: float, start_time: float) -> No
                     "version": 1,
                     "date": datetime.datetime.now(),
                     "type": type(model).__name__,
-                    "accuracy": f"{score:.2%}",
+                    "roc_auc_score": f"{score:.2%}",
                     "processing time": time_str,
                 },
             },
